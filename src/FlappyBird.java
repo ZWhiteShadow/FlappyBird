@@ -16,7 +16,7 @@ public class FlappyBird extends GraphicsProgram {
 
 	final static int SCREEN_WIDTH = 288, SCREEN_HEIGHT = 512, GROUND_LEVEL = 400, PIPE_WIDTH = 52, BIRD_X_START = 68;
 
-	Bird player1;
+	Bird player1, player2;
 	FileHandler highScoreFile;
 
 	static int currentMode = 0; // 0 = Get Ready, 1 = Playing, 2 = Falling, 3 = Game Over
@@ -148,7 +148,8 @@ public class FlappyBird extends GraphicsProgram {
 
 			// Draw the bird with his flappy little wings
 				if (FlappyBird.currentMode < 3)
-					player1.draw(this);
+					player1.draw(this,1);
+					// player2.draw(this,1);
 				// This controls the speed of the game
 					pause(40);
 				
@@ -394,12 +395,12 @@ public class FlappyBird extends GraphicsProgram {
 		Data.player1Dead.setSize(27,36);
 
 
-		// Player 2
-		// remove(Data.player2Up);
-		// remove(Data.player2Down);
-		// remove(Data.player2Flat);
-		// add(Data.player2Dead);
-		// Data.player2Dead.setSize(27,36);
+		//Player 2
+		remove(Data.player2Up);
+		remove(Data.player2Down);
+		remove(Data.player2Flat);
+		add(Data.player2Dead);
+		Data.player2Dead.setSize(27,36);
 
 		// Foreground
 		add(Data.ground);

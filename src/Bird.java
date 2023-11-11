@@ -11,7 +11,7 @@ import acm.program.*;
 
 public class Bird extends FlappyBird{
 
-	GRectangle birdRect;
+	GRectangle birdRect, birdRect2;
 
 	protected int downwardSpeed = 0, x, y;
 	private int animationCounter = 0;
@@ -23,6 +23,7 @@ public class Bird extends FlappyBird{
 		this.y = startingY;
 		// Creates a thin invisible rectangle on top of the bird as it flys for collision detection
 		birdRect = new GRectangle(x, y, 25, 30);
+		birdRect2 = new GRectangle(x - 35, y, 25, 30);
 
 	}
 
@@ -44,51 +45,60 @@ public class Bird extends FlappyBird{
 		return false;
 	}
 
-	public void updateBirdRect() {
-		double newWidth = birdSize() * 1.5;
-		double newHeight = birdSize();
+	public void updateBirdRect(int player) {
+		double newWidth = this.birdSize(player)[player-1] * 1.5;
+		double newHeight = this.birdSize(player)[player-1];
 		birdRect.setSize(newWidth, newHeight);
-		birdRect.setLocation(getX(), this.getY());
+		birdRect.setLocation(this.getX(), this.getY());
 	}
 
-	public double birdSize(){
+	public double[] birdSize(int player){
 		
 		//scale bird size based on Y location
-
+		double birdWidth1 = 0, birdHeight1 = 0, birdWidth2 = 0, birdHeight2 = 0;
 		double scalingFactor = 7; // Adjust this value to make the bird scale slower
 		double maxSize = 20.0; // Adjust this value to set the maximum size
 		
-		double birdHeight = Math.min((this.getY() / scalingFactor), maxSize);
-		
-		double birdWidth = birdHeight * 1.5; // Maintain the original proportions
+		if (player == 1){
+			birdHeight1 = Math.min((this.getY() / scalingFactor), maxSize);
+			birdWidth1 = birdHeight1 * 1.5; // Maintain the original proportions
+		} else{
+			birdHeight2 = Math.min((this.getY() / scalingFactor), maxSize);
+			birdWidth2 = birdHeight2 * 1.5; // Maintain the original proportions
+		}
 		
 		// player 1
-		Data.player1Down.setSize(birdWidth, birdHeight);
-		Data.player1Flat.setSize(birdWidth, birdHeight);
-		Data.player1Up.setSize(birdWidth, birdHeight);
+		Data.player1Down.setSize(birdWidth1, birdHeight1);
+		Data.player1Flat.setSize(birdWidth1, birdHeight1);
+		Data.player1Up.setSize(birdWidth1, birdHeight1);
 		// player 2
-		Data.player2Down.setSize(birdWidth, birdHeight);
-		Data.player2Flat.setSize(birdWidth, birdHeight);
-		Data.player2Up.setSize(birdWidth, birdHeight);
+		Data.player2Down.setSize(birdWidth2, birdHeight2);
+		Data.player2Flat.setSize(birdWidth2, birdHeight2);
+		Data.player2Up.setSize(birdWidth2, birdHeight2);
 
+		double[] birdHeight = {birdHeight1, birdHeight2};
 		return birdHeight;
 	}
 
 	/** Draw bird on screen **/
-	public void draw(GraphicsProgram window){
+	public void draw(GraphicsProgram window, int player){
 		
 		// Resets the location for all bird images
 		// Player 1
 			Data.player1Down.setLocation(FlappyBird.BIRD_X_START, this.getY());
 			Data.player1Flat.setLocation(FlappyBird.BIRD_X_START, this.getY());
 			Data.player1Up.setLocation(FlappyBird.BIRD_X_START, this.getY());		
+			updateBirdRect(1);
+			birdSize(player);
 		//Player 2
 			Data.player2Down.setLocation(FlappyBird.BIRD_X_START - 35, this.getY());
 			Data.player2Flat.setLocation(FlappyBird.BIRD_X_START - 35, this.getY());
 			Data.player2Up.setLocation(FlappyBird.BIRD_X_START - 35, this.getY());
+			updateBirdRect(2);
+			birdSize(player);
 
-		birdSize();
-		updateBirdRect();
+
+
 
 		if(FlappyBird.currentMode != 2){
 			
