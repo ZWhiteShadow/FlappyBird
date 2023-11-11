@@ -21,6 +21,7 @@ public class FlappyBird extends GraphicsProgram {
 
 	static int currentMode = 0; // 0 = Get Ready, 1 = Playing, 2 = Falling, 3 = Game Over
 	static int score = 0;
+	static int playerInput = 0;
 	boolean isNight = true;
 	int scoreChange = 0;
 
@@ -164,7 +165,7 @@ public class FlappyBird extends GraphicsProgram {
 		char character = key.getKeyChar();
 
 		if (character == ' ' || character == 'w')
-			respondToUserInput();
+			respondToUserInput(1);
 
 	}
 
@@ -182,18 +183,19 @@ public class FlappyBird extends GraphicsProgram {
 			return;
 		}
 
-		respondToUserInput();
+		respondToUserInput(2);
 
 	}
 
 	/** Responds to user input by invoking flapWing() or changing the game state **/
-	public void respondToUserInput() {
+	public void respondToUserInput(int inputType) {
 		// If the current mode is "Get Ready", it begins the game
 		if (FlappyBird.currentMode == 0) {
 			FlappyBird.currentMode = 1;
 			remove(Data.getReady);
 			remove(Data.instructions);
 			remove(Data.birdLogo);
+			playerInput = inputType;
 
 		}
 		// If the current mode is "Playing", the flapping sound effect is played and it

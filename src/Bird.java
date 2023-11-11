@@ -62,10 +62,11 @@ public class Bird extends FlappyBird{
 		
 		double birdWidth = birdHeight * 1.5; // Maintain the original proportions
 		
+		// player 1
 		Data.player1Down.setSize(birdWidth, birdHeight);
 		Data.player1Flat.setSize(birdWidth, birdHeight);
 		Data.player1Up.setSize(birdWidth, birdHeight);
-		//night
+		// player 2
 		Data.player2Down.setSize(birdWidth, birdHeight);
 		Data.player2Flat.setSize(birdWidth, birdHeight);
 		Data.player2Up.setSize(birdWidth, birdHeight);
@@ -81,11 +82,10 @@ public class Bird extends FlappyBird{
 			Data.player1Down.setLocation(FlappyBird.BIRD_X_START, this.getY());
 			Data.player1Flat.setLocation(FlappyBird.BIRD_X_START, this.getY());
 			Data.player1Up.setLocation(FlappyBird.BIRD_X_START, this.getY());		
-		// //Player 2
-		// 	Data.player2Down.setLocation(FlappyBird.BIRD_X_START, this.getY());
-		// 	Data.player2Flat.setLocation(FlappyBird.BIRD_X_START, this.getY());
-		// 	Data.player2Up.setLocation(FlappyBird.BIRD_X_START, this.getY());
-		
+		//Player 2
+			Data.player2Down.setLocation(FlappyBird.BIRD_X_START - 35, this.getY());
+			Data.player2Flat.setLocation(FlappyBird.BIRD_X_START - 35, this.getY());
+			Data.player2Up.setLocation(FlappyBird.BIRD_X_START - 35, this.getY());
 
 		birdSize();
 		updateBirdRect();
@@ -93,10 +93,10 @@ public class Bird extends FlappyBird{
 		if(FlappyBird.currentMode != 2){
 			
 			// Proceeds to the next image in the animation
-			if(animationCounter % 2 == 0)
-				animateBird(animationCounter/2, window);
+			if(this.animationCounter % 2 == 0)
+				this.animateBird(this.animationCounter/2, window);
 	
-			animationCounter = (animationCounter + 1) % 8;
+			this.animationCounter = (this.animationCounter + 1) % 8;
 			
 		}
 		
@@ -106,8 +106,8 @@ public class Bird extends FlappyBird{
 	public void fly(){
 
 		// Move Flappy Bird
-		downwardSpeed -= 1;
-		this.setY( this.getY() - downwardSpeed );
+		this.downwardSpeed -= 1;
+		this.setY(this.getY() - this.downwardSpeed );
 		
  	}
 
@@ -115,8 +115,8 @@ public class Bird extends FlappyBird{
 	public void capHeight(){
 		
 		// cap at top of screen
-		if(getY() > 20)
-			downwardSpeed = 10;
+		if(this.getY() > 20)
+			this.downwardSpeed = 10;
 
 	}
 
@@ -124,35 +124,35 @@ public class Bird extends FlappyBird{
 	protected void animateBird(int index, GraphicsProgram window){
 		
 		if(index == 0){
-			//Day
+			// Player 1
 			window.add(Data.player1Flat);
 			window.remove(Data.player1Up);
-			//Night
+			// Player 2
 			window.add(Data.player2Flat);
 			window.remove(Data.player2Up);
 		}
 		else if(index == 1){
-			//Day
+			// Player 1
 			window.add(Data.player1Down);
 			window.remove(Data.player1Flat);
-			//Night
-			window.add(Data.player2Flat);
+			// Player 2
+			window.add(Data.player2Down);
 			window.remove(Data.player2Flat);
 
 		}
 		else if(index == 2){
-			//Day
+			// Player 1
 			window.add(Data.player1Flat);
 			window.remove(Data.player1Down);
-			//Night
+			// Player 2
 			window.add(Data.player2Flat);
 			window.remove(Data.player2Down);
 		}
 		else{
-			//Day
+			// Player 1
 			window.add(Data.player1Up);
 			window.remove(Data.player1Flat);
-			//Night
+			// Player 2
 			window.add(Data.player2Up);
 			window.remove(Data.player2Flat);
 		}
