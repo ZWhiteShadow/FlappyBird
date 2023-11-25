@@ -23,7 +23,6 @@ public class FlappyBird extends GraphicsProgram {
 	static int currentMode = 0; // 0 = Get Ready, 1 = Playing, 2 = Falling, 3 = Game Over
 	static int score1, score2, total;
 	public static boolean isNight = true; // true = night, false = day
-	int scoreChange = 0; // needed to determin if night should change
 
 	// award for the space between pipes
 	// center of the space between pipes
@@ -167,11 +166,6 @@ public class FlappyBird extends GraphicsProgram {
 			if (FlappyBird.currentMode == 1) {
 
 				movePipes();
-				//if pipe furtheset to the left hits the left side of the screen
-				//call function changescorenight
-				if (Data.pipeBottomDay[0].getX() <= 0) {
-					scoreChangeNight();
-				}
 
 				// handlePipeCollision(player1);
 				handlePipeCollision(player2);
@@ -186,14 +180,6 @@ public class FlappyBird extends GraphicsProgram {
 			// This controls the speed of the game
 			pause(40);
 
-		}
-	}
-
-	// function to chagne to night every 500 points
-	public void scoreChangeNight() {
-		if ((int) total / 500 > scoreChange) {
-			scoreChange = (int) (total) / 500;
-			changeNight();
 		}
 	}
 
