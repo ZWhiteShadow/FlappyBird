@@ -241,15 +241,15 @@ public class FlappyBird extends GraphicsProgram {
 
 	private void calculateScore(Bird player, int scoreIndex, int i) {
 		int[] scores = { score1, score2 };
-		int[] distances1 = { distance1[i], distance2[i] };
-		int[] distances2 = { distance2[i], distance1[i] };
+		int[] distances = { distance1[i], distance2[i] };
 
 		if (player.getY() < topOfMiddlePipe[i] + 55.5) {
-			scores[scoreIndex - 1] += 100 - distances1[scoreIndex - 1];
-		} else if (player.getY() > bottomOfMiddlePipe[i] - 55.5) {
-			scores[scoreIndex - 1] += 100 - distances2[scoreIndex - 1];
+			scores[scoreIndex - 1] += 100 - distances[0];
 		}
-
+		 else  if (player.getY() > bottomOfMiddlePipe[i] - 55.5) {
+			scores[scoreIndex - 1] += 100 - distances[1];
+		 }
+	
 		// Update the original score variables
 		score1 = scores[0];
 		score2 = scores[1];
