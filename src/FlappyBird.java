@@ -23,7 +23,7 @@ public class FlappyBird extends GraphicsProgram {
 	static int currentMode = 0; // 0 = Get Ready, 1 = Playing, 2 = Falling, 3 = Game Over
 	static int score1, score2, total;
 	public static boolean isNight = true; // true = night, false = day
-	int scoreChange = 0; // needed to determin if night should change
+	Boolean scoreGained = false;
 
 	// award for the space between pipes
 	// center of the space between pipes
@@ -105,7 +105,7 @@ public class FlappyBird extends GraphicsProgram {
 		add(Data.player1Up);
 
 		// Initializes the images for the running total digits so that it's not null
-		// (Places it out of view)
+		// (Places it out of view)handlePipeCollision
 		for (int n = 0; n < 10; n++) {
 			// loop thru 3 scores
 			for (int i = 0; i < 3; i++) {
@@ -124,12 +124,22 @@ public class FlappyBird extends GraphicsProgram {
 
 	}
 
-	private void handlePipeCollision(Bird player) {
+	private void handlePipeCollision(Bird player, int playerIndex) {
 		if (player.pipeCollision()) {
-			Music.playSound("Music/falling.wav");
+			if (playerIndex == 1 && scoreGained == true) {
+				score1 = 0;
+				drawScore();
+				Music.playSound("Music/falling.wav");
+			} else if (playerIndex == 2 && scoreGained == true) {
+				score2 = 0;
+				drawScore();
+				Music.playSound("Music/falling.wav");
+			}
+			if (scoreGained == true && score1 == 0 && score2 == 0) {
+				currentMode = 2;
+				endRound();
+			}
 			player.downwardSpeed = Math.min(0, player.downwardSpeed);
-			currentMode = 2;
-			endRound();
 		}
 	}
 
@@ -167,15 +177,9 @@ public class FlappyBird extends GraphicsProgram {
 			if (FlappyBird.currentMode == 1) {
 
 				movePipes();
-				//if pipe furtheset to the left hits the left side of the screen
-				//call function changescorenight
-				if (Data.pipeBottomDay[0].getX() <= 0) {
-					scoreChangeNight();
-				}
 
-				// handlePipeCollision(player1);
-				handlePipeCollision(player2);
-
+					handlePipeCollision(player1, 1);
+					handlePipeCollision(player2, 2);
 			}
 			moveBackground();
 
@@ -186,14 +190,6 @@ public class FlappyBird extends GraphicsProgram {
 			// This controls the speed of the game
 			pause(40);
 
-		}
-	}
-
-	// function to chagne to night every 500 points
-	public void scoreChangeNight() {
-		if ((int) total / 500 > scoreChange) {
-			scoreChange = (int) (total) / 500;
-			changeNight();
 		}
 	}
 
@@ -255,18 +251,20 @@ public class FlappyBird extends GraphicsProgram {
 
 	private void calculateScore(Bird player, int scoreIndex, int i) {
 		int[] scores = { score1, score2 };
-		int[] distances1 = { distance1[i], distance2[i] };
-		int[] distances2 = { distance2[i], distance1[i] };
+		int[] distances = { distance1[i], distance2[i] };
 
-		if (player.getY() < topOfMiddlePipe[i] + 55.5) {
-			scores[scoreIndex - 1] += 100 - distances1[scoreIndex - 1];
-		} else if (player.getY() > bottomOfMiddlePipe[i] - 55.5) {
-			scores[scoreIndex - 1] += 100 - distances2[scoreIndex - 1];
+		if (player.getY() < topOfMiddlePipe[i] + 55.5 ) {
+			scores[scoreIndex - 1] += 100 - distances[0];
+			scoreGained = true;
 		}
-
+		 else  if (player.getY() > bottomOfMiddlePipe[i] - 55.5) {
+			scores[scoreIndex - 1] += 100 - distances[1];
+			scoreGained = true;
+		 }
+	
 		// Update the original score variables
-		score1 = scores[0];
-		score2 = scores[1];
+			score1 = scores[0];
+			score2 = scores[1];
 	}
 
 	/** Moves the pipes to the left, warping to the right side if needed **/
@@ -546,6 +544,8 @@ private GImage flipAndReplaceImage(GImage oldImage) {
 	/** Resets game graphics **/
 	public void replayGame() {
 		// Remove elements from screen
+		scoreGained = false;
+		
 		remove(Data.replayButton);
 		remove(Data.gameOver);
 		changeNight();
